@@ -15,6 +15,7 @@ import {
   Star,
   Film
 } from 'lucide-react';
+import { ReliableVideo } from './ReliableVideo';
 
 interface HeroProps {
   onExploreClick: () => void;
@@ -39,8 +40,7 @@ export const Hero: React.FC<HeroProps> = ({
       heroVideoRef.current.pause();
       setIsPlaying(false);
     } else {
-      heroVideoRef.current.play().catch(() => {});
-      setIsPlaying(true);
+      heroVideoRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
     }
   };
 
@@ -75,7 +75,7 @@ export const Hero: React.FC<HeroProps> = ({
 
             {/* Main Punchy Heading */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.25] text-slate-900 dark:text-white">
-              استأجر أفضل صناع{' '}
+              التعاون مع أفضل صناع{' '}
               <span className="relative inline-block">
                 <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600">
                   الفيديوهات والإعلانات
@@ -183,25 +183,20 @@ export const Hero: React.FC<HeroProps> = ({
                 className="relative rounded-[2.2rem] bg-slate-950 border-4 border-slate-800/90 shadow-2xl overflow-hidden aspect-[9/16] cursor-pointer group"
               >
                 
-                <video
-                  ref={heroVideoRef}
+                <ReliableVideo
+                  videoRef={heroVideoRef}
+                  src="/assets/videos/aromatic_perfume_ad.mp4"
+                  fallbackSrc="/assets/aistudio/_____________________________________________________2a7706a7.mp4"
+                  containerClassName="absolute inset-0"
+                  controls={false}
                   autoPlay
                   loop
                   muted={isMuted}
                   playsInline
-                  onError={(e) => {
-                    const el = e.currentTarget;
-                    if (el.src !== '/assets/videos/aromatic_perfume_ad.mp4') {
-                      el.src = '/assets/videos/aromatic_perfume_ad.mp4';
-                      el.load();
-                      el.play().catch(() => {});
-                    }
-                  }}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
                   className="w-full h-full object-cover"
-                >
-                  <source src="/assets/videos/aromatic_perfume_ad.mp4" type="video/mp4" />
-                  <source src="/assets/aistudio/_____________________________________________________2a7706a7.mp4" type="video/mp4" />
-                </video>
+                />
                 
                 {/* Subtle Gradient Overlays for readable text */}
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-slate-950/50 pointer-events-none"></div>

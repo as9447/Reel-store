@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { VideoOrder, UserSession, SampleVideo, CreatorProfile } from '../types';
 import { formatCurrencyEGP } from '../utils/pricing';
+import { ReliableVideo } from './ReliableVideo';
 
 interface ClientDashboardProps {
   orders: VideoOrder[];
@@ -232,21 +233,12 @@ export const ClientDashboard: React.FC<ClientDashboardProps> = ({
 
                   {/* Video preview player frame */}
                   <div className="relative rounded-2xl bg-black overflow-hidden aspect-[16/9] flex items-center justify-center group">
-                    <video 
+                    <ReliableVideo
+                      src={selectedOrder.draftVideoUrl}
+                      fallbackSrc="/assets/videos/aromatic_perfume_ad.mp4"
+                      containerClassName="absolute inset-0"
                       className="w-full h-full object-contain"
-                      controls
-                      playsInline
-                      onError={(e) => {
-                        const el = e.currentTarget;
-                        if (el.src !== '/assets/videos/aromatic_perfume_ad.mp4') {
-                          el.src = '/assets/videos/aromatic_perfume_ad.mp4';
-                          el.load();
-                        }
-                      }}
-                    >
-                      <source src={selectedOrder.draftVideoUrl} type="video/mp4" />
-                      <source src="/assets/videos/aromatic_perfume_ad.mp4" type="video/mp4" />
-                    </video>
+                    />
                   </div>
 
                   <p className="text-xs text-slate-600 dark:text-slate-300">

@@ -13,6 +13,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { CreatorProfile, SampleVideo } from '../types';
+import { isEmbeddedVideoUrl, ReliableVideo } from './ReliableVideo';
 
 interface VideoPlayerModalProps {
   video: SampleVideo | null;
@@ -36,16 +37,15 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {
+      const player = videoRef.current;
+      player.currentTime = 0;
+      setIsPlaying(false);
+      player.play().then(() => setIsPlaying(true)).catch(() => {
         // Autoplay policy fallback with muted
-        if (videoRef.current) {
-          videoRef.current.muted = true;
-          setIsMuted(true);
-          videoRef.current.play().catch(() => {});
-        }
+        player.muted = true;
+        setIsMuted(true);
+        player.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
       });
-      setIsPlaying(true);
     }
   }, [video]);
 
@@ -57,8 +57,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
       videoRef.current.pause();
       setIsPlaying(false);
     } else {
-      videoRef.current.play();
-      setIsPlaying(true);
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
     }
   };
 
@@ -76,6 +75,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
   };
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const isEmbeddedVideo = isEmbeddedVideoUrl(video.videoUrl);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
@@ -95,29 +95,23 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
         {/* Video Player Column (9:16 Aspect ratio container) */}
         <div className="relative flex-1 bg-black flex items-center justify-center overflow-hidden">
           
-          <video
-            ref={videoRef}
+          <ReliableVideo
+            videoRef={videoRef}
+            src={video.videoUrl}
             poster={video.thumbnail}
+            fallbackSrc="/assets/videos/aromatic_perfume_ad.mp4"
+            containerClassName="absolute inset-0"
+            controls={false}
             loop
-            playsInline
             onTimeUpdate={handleTimeUpdate}
-            onClick={togglePlay}
-            onError={(e) => {
-              const el = e.currentTarget;
-              if (el.src !== '/assets/videos/aromatic_perfume_ad.mp4') {
-                el.src = '/assets/videos/aromatic_perfume_ad.mp4';
-                el.load();
-                el.play().catch(() => {});
-              }
-            }}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onClick={isEmbeddedVideo ? undefined : togglePlay}
             className="w-full h-full object-contain cursor-pointer"
-          >
-            <source src={video.videoUrl} type="video/mp4" />
-            <source src="/assets/videos/aromatic_perfume_ad.mp4" type="video/mp4" />
-          </video>
+          />
 
           {/* Click to Play Overlay when paused */}
-          {!isPlaying && (
+          {!isEmbeddedVideo && !isPlaying && (
             <div 
               onClick={togglePlay}
               className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
@@ -129,7 +123,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
           )}
 
           {/* Player Controls Bar on Bottom */}
-          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col gap-2">
+          {!isEmbeddedVideo && <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col gap-2">
             
             {/* Progress line */}
             <div className="w-full h-1.5 bg-white/30 rounded-full overflow-hidden cursor-pointer"
@@ -172,7 +166,7 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               )}
             </div>
 
-          </div>
+          </div>}
 
         </div>
 

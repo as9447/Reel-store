@@ -9,7 +9,7 @@ export const PAYMENT_METHODS: PaymentMethodConfig[] = [
     badge: 'الأسرع والأكثر استخداماً ⚡',
     iconName: 'Zap',
     brandColor: 'from-purple-600 via-indigo-600 to-blue-600',
-    accountIdentifier: 'reelstore@instapay',
+    accountIdentifier: 're****tore@instapay',
     accountName: 'Reel Store Egypt Ltd - ريل ستور',
     instructions: [
       'افتح تطبيق InstaPay على هاتفك المحمول.',
@@ -27,7 +27,7 @@ export const PAYMENT_METHODS: PaymentMethodConfig[] = [
     badge: 'سهل ومتاح للجميع 📱',
     iconName: 'Smartphone',
     brandColor: 'from-rose-600 via-red-600 to-amber-600',
-    accountIdentifier: '01099238174',
+    accountIdentifier: '012********',
     accountName: 'محفظة ريل ستور الرسمية المعتمدة',
     instructions: [
       'اطلب كود التحويل #7*9* من خط فودافون كاش أو استخدم تطبيق أنا فودافون / محفظتك البنكية.',
@@ -44,12 +44,12 @@ export const PAYMENT_METHODS: PaymentMethodConfig[] = [
     badge: 'للشركات والمؤسسات 🏦',
     iconName: 'Building2',
     brandColor: 'from-cyan-600 via-blue-700 to-indigo-800',
-    accountIdentifier: 'EG480010000000000192837465',
+    accountIdentifier: 'EG4800100**********2837465',
     accountName: 'Reel Store for Media & Advertising (CIB Bank)',
     instructions: [
       'قم بتسجيل الدخول إلى تطبيق البنك الخاص بك (Online Banking) أو تفضل بزيارة أقرب فرع.',
       'قم بعمل تحويل لحساب شركة ريل ستور بالبنك التجاري الدولي (CIB):',
-      'رقم الحساب: 100049283746 | الآيبان (IBAN): EG480010000000000192837465',
+      'رقم الحساب: 100*****3746 | الآيبان (IBAN): EG48001********0192837465',
       'اكتب اسم شركتك في خانة الغرض من التحويل، ثم أدخل رقم التحويل المرجعي بالأسفل.'
     ]
   }
